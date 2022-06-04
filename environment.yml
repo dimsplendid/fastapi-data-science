@@ -24,7 +24,7 @@ dependencies:
   - mypy=0.950=py310he2412df_0
   - mypy_extensions=0.4.3=py310h5588dad_5
   - openssl=3.0.3=h8ffe710_0
-  - pip=22.1=pyhd8ed1ab_0
+  - pip=22.1.2=pyhd8ed1ab_0
   - psutil=5.9.0=py310he2412df_1
   - pycodestyle=2.8.0=pyhd8ed1ab_0
   - pycparser=2.21=pyhd8ed1ab_0
@@ -72,4 +72,4 @@ dependencies:
     - uvicorn==0.17.6
     - watchgod==0.8.2
     - websockets==10.3
-prefix: F:\opt\anaconda\envs\fastapi-data-science
+prefix: D:\opt\miniconda3\envs\fastapi-data-science
