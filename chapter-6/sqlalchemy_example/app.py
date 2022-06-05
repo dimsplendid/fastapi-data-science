@@ -1,3 +1,4 @@
+from typing import Mapping, cast
 from unittest import result
 from databases import Database
 from fastapi import (
@@ -15,6 +16,9 @@ from .models import (
     PostDB,
     PostCreate,
     PostPartialUpdate,
+    comments,
+    CommentDB,
+    CommentCreate,
 )
 
 app = FastAPI()
@@ -61,7 +65,7 @@ async def list_posts(
     return results
 
 @app.get("/posts/{id}", response_model=PostDB)
-async def get_post(post: PostDB= Depends(get_post_or_404)) -> PostDB:
+async def get_post(post: PostDB = Depends(get_post_or_404)) -> PostDB:
     return post
 
 @app.post("/posts", response_model=PostDB, status_code=status.HTTP_201_CREATED)
@@ -100,3 +104,26 @@ async def delete_post(
 ):
     delete_query = posts.delete().where(posts.c.id == post.id)
     await database.execute(delete_query)
+
+@app.post("/comments", 
+          response_model=CommentDB, status_code=status.HTTP_201_CREATED)
+async def create_comment(
+    comment: CommentCreate,
+    database: Database = Depends(get_database)
+) -> CommentDB:
+    select_post_query = posts.select().where(posts.c.id == comment.post_id)
+    post = await database.fetch_one(select_post_query)
+    
+    if post is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Post {id} does not exist",
+        )
+        
+    insert_query = comments.insert().values(comment.dict())
+    comment_id = await database.execute(insert_query)
+    
+    select_query = comments.select().where(comments.c.id == comment_id)
+    raw_comment = cast(Mapping, await database.fetch_one(select_query))
+    
+    return CommentDB(**raw_comment)
