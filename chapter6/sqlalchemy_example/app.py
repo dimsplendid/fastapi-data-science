@@ -49,7 +49,11 @@ async def get_post_or_404(
     if raw_post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     
-    return PostDB(**raw_post)
+    select_post_comments_query = comments.select().where(comments.c.post_id==id)
+    raw_comments = await database.fetch_all(select_post_comments_query)
+    comments_list = [CommentDB(**comment) for comment in raw_comments]
+    
+    return PostDB(**raw_post, comments=comments_list)
 
 @app.get("/posts")
 async def list_posts(
