@@ -9,12 +9,13 @@ from fastapi import (
     status
 )
 
-from .database import get_database, sqlalchemy_engine
-from .models import (
+from database import get_database, sqlalchemy_engine
+from models import (
     metadata,
     posts,
     PostDB,
     PostCreate,
+    PostPublic,
     PostPartialUpdate,
     comments,
     CommentDB,
@@ -42,7 +43,7 @@ async def pagination(
 
 async def get_post_or_404(
     id: int, database: Database = Depends(get_database)
-) -> PostDB:
+) -> PostPublic:
     select_query = posts.select().where(posts.c.id == id)
     raw_post = await database.fetch_one(select_query)
     
@@ -53,7 +54,7 @@ async def get_post_or_404(
     raw_comments = await database.fetch_all(select_post_comments_query)
     comments_list = [CommentDB(**comment) for comment in raw_comments]
     
-    return PostDB(**raw_post, comments=comments_list)
+    return PostPublic(**raw_post, comments=comments_list)
 
 @app.get("/posts")
 async def list_posts(
@@ -68,8 +69,8 @@ async def list_posts(
     
     return results
 
-@app.get("/posts/{id}", response_model=PostDB)
-async def get_post(post: PostDB = Depends(get_post_or_404)) -> PostDB:
+@app.get("/posts/{id}", response_model=PostPublic)
+async def get_post(post: PostPublic = Depends(get_post_or_404)) -> PostPublic:
     return post
 
 @app.post("/posts", response_model=PostDB, status_code=status.HTTP_201_CREATED)
