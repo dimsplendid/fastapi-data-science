@@ -47,7 +47,7 @@ class PostPublic(PostDB):
 class CommentTortoise(Model):
     id = fields.IntField(pk=True, generated=True)
     post = fields.ForeignKeyField(
-        "PostTortoise", related_name="comments", null=True
+        "models.PostTortoise", related_name="comments", null=True
     )
     publication_date = fields.DatetimeField(null=False)
     content = fields.TextField(null=False)
