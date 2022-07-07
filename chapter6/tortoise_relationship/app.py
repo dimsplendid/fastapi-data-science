@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI, HTTPException, Query, status
 from tortoise.contrib.fastapi import register_tortoise
 from tortoise.exceptions import DoesNotExist
 
-from .models import (
+from models import (
     CommentBase,
     CommentDB,
     CommentTortoise,
@@ -88,7 +88,7 @@ TORTOISE_ORM = {
     },
     "apps": {
         "models": {
-            "models": ["tortoise_relationship.models", "aerich.models"],
+            "models": ["models", "aerich.models"],
             "default_connection": "default",
         },
     },
