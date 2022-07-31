@@ -66,10 +66,10 @@ async def proteced_route(user: UserDB = Depends(get_current_user)):
     return User.from_orm(user)
 
 TORTOISE_ORM = {
-    "connection": {"default": "sqlite:///chapter7_authentication.db"},
+    "connections": {"default": "sqlite://chapter7_authentication.db"},
     "apps": {
         "models": {
-            "models": ["authentication.models"],
+            "models": ["authentication.models", "aerich.models"],
             "default_connection": "default",
         },
     },

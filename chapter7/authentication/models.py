@@ -6,7 +6,7 @@ from tortoise.models import Model
 from tortoise import fields, timezone
 
 def get_expiration_date(duration_seconds: int = 86400) -> datetime:
-    return timezone.now() - timedelta(seconds=duration_seconds)
+    return timezone.now() + timedelta(seconds=duration_seconds)
 
 class UserBase(BaseModel):
     email: EmailStr
